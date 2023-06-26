@@ -58,7 +58,7 @@ function messingAround() {
   // Exploring grabbing check in date to use for averages since that month
   const recentCheckin = CHECKINSHEET.getRange(3, 3).getDisplayValue()
   Logger.log(recentCheckin)
-  const month = CHECKINSHEET.split('/')[0]
+  const month = recentCheckin.split('/')[0]
   Logger.log(month)
 
   // Change month from checkin to a number, then find the long month name, year in the headings.
