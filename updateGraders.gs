@@ -1,9 +1,8 @@
-// Here is our code
-
+// Global Variables
 const CHECKINSHEET = SpreadsheetApp.openById('1P6zePMqCGSBxmLiv3sgIidoTKOF61vTV6-wXX5t_psg').getSheetByName('GraderData')
 const CONTRACTORSUNIVERAL = SpreadsheetApp.openById('1QFD2-76RIHwd_WEe5HooOKDkggiMuS5gR3iA7mCv8rc').getSheetByName('Master List')
 
-// Returns 2D array of grader IDs from Contractor's Universal - used by updateTrackingSheet
+// Returns 2D array of grader usernames from Contractor's Universal - used by Grader Tracking
 function getGraders() {
   const lastRow = CONTRACTORSUNIVERAL.getLastRow()
   const graderColumn = findColumnNumber(CONTRACTORSUNIVERAL, 'Grade')
@@ -29,7 +28,7 @@ function updateGraders() {
 }
 
 
-// Helper function to find column number of 'Grade' column in Contractor's Universal
+// Helper function to find column number based on column name
 function findColumnNumber (sheet, columnName) {
   const columnHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getDisplayValues()
 
