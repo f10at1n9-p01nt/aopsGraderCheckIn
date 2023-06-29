@@ -20,12 +20,11 @@ function getGraders() {
 
 // Main Function: Updates username column with all graders
 function updateGraders() {
-  // const graderUsernames = makeGraderLinks()
-  const graderUsernames = getGraders()
+  const graderUsernames = makeGraderLinks()
   const allGradersCol = findColumnNumber(CHECKINSHEET, 'Graders')
 
   CHECKINSHEET.getRange(3, allGradersCol, CHECKINSHEET.getLastRow()).clear()
-  CHECKINSHEET.getRange(3, allGradersCol, graderUsernames.length).setValues(graderUsernames)
+  CHECKINSHEET.getRange(3, allGradersCol, graderUsernames.length).setRichTextValues(graderUsernames)
 }
 
 
@@ -37,27 +36,17 @@ function findColumnNumber (sheet, columnName) {
 }
 
 
+// Grabs all grader usernames from Contractors Universal and links the username to Grader Admin
 function makeGraderLinks() {
   const graders = getGraders()
-  Logger.log(graders)
   const linkedGraders = []
 
   graders.forEach((grader) => {
     let hyperlink = `https://artofproblemsolving.com/grader/admin.php/${grader[0]}`
-    let username = SpreadsheetApp.newRichTextValue().setText(grader[0]).setLinkUrl(hyperlink).build()
-    linkedGraders.push([username])
+    let linkedUsername = SpreadsheetApp.newRichTextValue().setText(grader[0]).setLinkUrl(hyperlink).build()
+    linkedGraders.push([linkedUsername])
   })
-  Logger.log(linkedGraders)
   return linkedGraders
-
-  // rowsToMakeUrl.forEach((row) => {
-  //   let classId = sheet.getRange(row,2).getDisplayValue();
-  //   let weekNumber = sheet.getRange(row,4).getDisplayValue();
-  //   let courseName = sheet.getRange(row,3).getDisplayValue();
-  //   let hyperlink = `https://artofproblemsolving.com/grader/release/class-${classId}/week-${weekNumber}`;
-  //   let cellValue = SpreadsheetApp.newRichTextValue().setText(courseName).setLinkUrl(`${hyperlink}`).build();
-  //   sheet.getRange(row,3).setRichTextValue(cellValue);
-  // })
 }
 
 

@@ -76,11 +76,11 @@ function updateCheckIns() {
 
 
   //This is the case where numMatchingUsers == 1 so we do the stuff:
-  sheet.getRange(userMatchIdx + 1, findColumnNumber(sheet, 'Last')).setValue(date)
+  sheet.getRange(userMatchIdx + 1, findColumnNumber(sheet, 'Date')).setValue(date)
 
   //This is replaced with a number representing urgency
   //sheet.getRange(userMatchIdx + 1, findColumnNumber(sheet, 'Next')).setValue(nextDate)
 }
 
 //Run it
-updateCheckIns()
+// updateCheckIns()
