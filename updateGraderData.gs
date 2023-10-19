@@ -1,5 +1,4 @@
 // const CHECKINSHEET = SpreadsheetApp.openById('1P6zePMqCGSBxmLiv3sgIidoTKOF61vTV6-wXX5t_psg').getSheetByName('TestGraderData') //Using test sheet for now
-// const CONTRACTORSUNIVERAL = SpreadsheetApp.openById('1QFD2-76RIHwd_WEe5HooOKDkggiMuS5gR3iA7mCv8rc').getSheetByName('Master List')
 const GRADERTRACKINGSS = SpreadsheetApp.openById('1tN90iK8k9Snd_zZm7QpyiNM5_oddc1SNwrqkQLk0hyU')
 
 // MAIN function that runs the show
@@ -10,6 +9,7 @@ function updateGraderCheckinData() {
   let graders = createGraderArr()  //An array of objects of all Graders. Instantiates totalRatings array and monthlyRatings object for each grader
 
   months.forEach((month, idx) => {
+    setMonthHeadings(month, idx) // Prints month headings in sheet
     getRating(month, graders, idx)
     getGradingTotals(month, graders)
   })
@@ -26,6 +26,12 @@ function updateGraderCheckinData() {
     row[2] ? CHECKINSHEET.getRange(idx+3, 3).setRichTextValue(row[2]): CHECKINSHEET.getRange(idx+3, 3).setValue('')
     CHECKINSHEET.getRange(idx+3, 4, 1, row.length-3).setValues([row.slice(3)])
   })
+}
+
+
+function setMonthHeadings(month, idx) {
+    let date = new Date(`2000-${month.slice(0,3)}-01`)
+    CHECKINSHEET.getRange(1, 20+6*idx).setValue(date.toLocaleDateString(undefined, { month: 'long' }))
 }
 
 
