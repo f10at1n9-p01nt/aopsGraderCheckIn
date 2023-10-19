@@ -1,0 +1,49 @@
+Things to do
+1. Update "Next" value
+2. Auto populate Grader column
+3. Update grader data
+4. Auto email the graders that need reviews (Next is 5)
+
+
+Update "Next" value
+* Do we want to add something in the form to manually set Next value to something higher than 1, otherwise start at 1?
+* And/or should the cube rating affect the Next value?
+* Otherwise - can we just use the date to update it?
+
+
+Auto populate Grader column
+* This code is done, but the key is to not lose all the data we already have each time this gets updated. 
+* This is related to the next task.
+
+
+Update grader data
+* Need to cache some of the data
+
+Current flow
+- updateGraderCheckinData() is called
+  <!-- - calls updateGraders() - this clears all grader usernames and replaces them with usernames of graders ('Y' in contractors grade column) linked to grader admin page -->
+  - var months: an array of sheet names that have the most recent 6 month's data 	[Sep2023, Aug2023, Jul2023, Jun2023, May2023, Apr2023]
+  - var graders: An array of grader objects [{monthlyRatings={}, totalRatings=[0.0, 0.0, 0.0, 0.0, 0.0], username=JunaBug13, usernameRichText = RichTextValue}, {monthlyRatings={}, totalRatings=[0.0, 0.0, 0.0, 0.0, 0.0], username=WirryWoo, usernameRichText = RichTextValue}, ...]
+  - loops through months array
+    - updates each grader's totalRatings array and adds the individual monthlyRatings array to the monthlyRatings object
+    - calculates weighted monthly average rating and adds to graders array. Below is one sample object in the graders array:
+
+    {username=JunaBug13, monthlyRatings={Jul2023ratings=[0.0, 0.0, 0.0, 0.0, 0.0], May2023ratings=[0.0, 0.0, 0.0, 0.0, 0.0], Apr2023ratings=[0.0, 0.0, 0.0, 0.0, 0.0], Aug2023ratings=[0.0, 0.0, 0.0, 0.0, 0.0], Jun2023averageRtg=0.0, Apr2023averageRtg=0.0, Sep2023averageRtg=3.8, Jul2023averageRtg=0.0, May2023averageRtg=0.0, Sep2023ratings=[0.0, 0.0, 1.0, 0.0, 2.0], Aug2023averageRtg=0.0, Jun2023ratings=[0.0, 0.0, 0.0, 0.0, 0.0]}, totalRatings=[0.0, 0.0, 1.0, 0.0, 2.0]}
+    
+  - var rows: an array to build each row of the spreadsheet to copy to grader check ins 
+  - loops through graders
+    - builds a row for each grader and pushes it to rows. Looks something like following: (this part isn't fully functioning)
+      [JunaBug13, null, RichTextValue, , , , 3.8, 3.0, 0.0, 0.0, null, null, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.8, 3.0, null, null, null, null, 0.0, 0.0, null, null, null, null, 0.0, 0.0, null, null, null, null, 0.0, 0.0, null, null, null, null, 0.0, 0.0, null, null, null, null, 0.0, 0.0, null, null, null, null]
+  - loops through rows and prints them to the spreadsheet
+
+Some issues with building the rows
+* Needs to update months in first row
+* Doesn't copy the link to Front, nor do I think it grabs the Review By or Next values. 
+
+
+
+Formulas to copy to TestGraderData to get values
+Column B: =INDEX(GraderData!B:B, MATCH($A3, GraderData!$A:$A,0))
+
+Drag across and down
+

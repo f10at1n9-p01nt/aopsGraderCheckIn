@@ -36,24 +36,45 @@ function findColumnNumber (sheet, columnName) {
   }
 }
 
+function nextUpdate (cuberating) {
+
+  const today = new Date()
+  const yyyy = today.getFullYear();
+  let mm = (today.getMonth() + 1 + Number(cuberating)) % 12; // Months start at 0!
+  let dd = today.getDate();
+  return mm + '/'  + dd + '/' + yyyy
+
+}
+
 //This updates the next and last check-in columns based on the form
 function updateCheckIns() {
 
   loadOpsData()     //this loads the goods  
 
+//Format the date correctly
+const date = new Date();
+const yyyy = date.getFullYear();
+let mm = date.getMonth() + 1; // Months start at 0!
+let dd = date.getDate();
+const formattedToday = mm + '/' + dd + '/' + yyyy
+
 
 //initialization party
   const formResponses = form.getResponses() ;                   
-  const date = new Date();
   const latestResponse = formResponses[formResponses.length - 1]
   const usernameItem = form.getItems()[0]
+  const cuberating = latestResponse.getResponseForItem(form.getItems()[4]).getResponse()
   const username = latestResponse.getResponseForItem(usernameItem).getResponse()
+  const frontLinkItem = form.getItems()[5]
+  const linkResponse = latestResponse.getResponseForItem(frontLinkItem).getResponse()
   const data = sheet.getDataRange().getValues()
   const gradersCol = findColumnNumber(sheet,"Graders") - 1;
+  var dateLink = SpreadsheetApp.newRichTextValue().setText(formattedToday).setLinkUrl(`${linkResponse}`).build()
   var numMatchingUsers = 0
   var userMatchIdx 
   var nextDate = new Date();
   nextDate.setMonth(nextDate.getMonth() + 3)
+
 
 
 //Loop through the columns in the grader row and count how many matches we have and where they are up to case.
@@ -75,12 +96,17 @@ function updateCheckIns() {
   }
 
 
-  //This is the case where numMatchingUsers == 1 so we do the stuff:
-  sheet.getRange(userMatchIdx + 1, findColumnNumber(sheet, 'Date')).setValue(date)
+  const nxt = nextUpdate(cuberating)
 
+  //This is the case where numMatchingUsers == 1 so we do the stuff:
+  sheet.getRange(userMatchIdx + 1, findColumnNumber(sheet, 'Date')).setRichTextValue(dateLink)
+  sheet.getRange(userMatchIdx + 1, findColumnNumber(sheet, 'Next')).setValue(nxt)
+ 
+
+  
   //This is replaced with a number representing urgency
   //sheet.getRange(userMatchIdx + 1, findColumnNumber(sheet, 'Next')).setValue(nextDate)
-}
+  
 
-//Run it
-// updateCheckIns()
+
+}
